@@ -1,6 +1,7 @@
 import { app } from 'electron';
 import path from 'path';
 import fs from 'fs';
+import Database from 'better-sqlite3';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
@@ -25,31 +26,27 @@ export async function initDatabase(): Promise<void> {
 
   process.env.DATABASE_URL = dbUrl;
 
+  // Initialize schema using better-sqlite3 (works in packaged app unlike npx prisma)
+  const prismaDir = path.join(__dirname, '..', 'prisma');
+  const initSqlPath = path.join(prismaDir, 'init.sql');
+
+  try {
+    const db = new Database(dbPath);
+    db.pragma('journal_mode = WAL');
+    db.pragma('foreign_keys = ON');
+    const initSql = fs.readFileSync(initSqlPath, 'utf-8');
+    db.exec(initSql);
+    db.close();
+    console.log('Database schema initialized via init.sql');
+  } catch (error) {
+    console.error('Failed to initialize database schema:', error);
+  }
+
   prisma = new PrismaClient({
     datasources: {
       db: { url: dbUrl },
     },
   });
-
-  // Run migrations / push schema
-  // For desktop, we use db push approach via Prisma's built-in
-  // The schema is pushed on first run
-  const { execSync } = require('child_process');
-  // In packaged app, asar-unpacked files are at app.asar.unpacked/ instead of app.asar/
-  const baseDir = __dirname.replace('app.asar', 'app.asar.unpacked');
-  const prismaDir = path.join(baseDir, '..', 'prisma');
-
-  try {
-    execSync(
-      `npx prisma db push --schema="${prismaDir}/schema.prisma" --skip-generate --accept-data-loss`,
-      {
-        env: { ...process.env, DATABASE_URL: dbUrl },
-        stdio: 'pipe',
-      },
-    );
-  } catch (error) {
-    console.log('Prisma db push (may be first run):', error);
-  }
 
   await prisma.$connect();
 

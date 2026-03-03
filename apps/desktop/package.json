@@ -7,9 +7,10 @@
   "main": "dist/main.js",
   "scripts": {
     "build:prisma": "prisma generate --schema=prisma/schema.prisma",
+    "build:schema-sql": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script | sed 's/CREATE TABLE/CREATE TABLE IF NOT EXISTS/g; s/CREATE UNIQUE INDEX/CREATE UNIQUE INDEX IF NOT EXISTS/g' > prisma/init.sql",
     "build:api": "tsc -p tsconfig.main.json",
     "build:web": "cd ../web && npx vite build --outDir=../desktop/dist/web --emptyOutDir",
-    "build:all": "npm run build:prisma && npm run build:api && npm run build:web",
+    "build:all": "npm run build:prisma && npm run build:schema-sql && npm run build:api && npm run build:web",
     "start": "electron dist/main.js",
     "dev": "npm run build:all && electron dist/main.js",
     "pack": "npm run build:all && electron-builder --dir",
@@ -45,6 +46,7 @@
     "appId": "com.qualirec.desktop",
     "productName": "QualiRec",
     "copyright": "Copyright © 2026 QualiRec",
+    "asar": false,
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "resources/icon.png",
@@ -61,14 +63,9 @@
       "dist/**/*",
       "prisma/**/*",
       "node_modules/**/*",
+      "node_modules/.prisma/**/*",
       "!node_modules/.cache",
       "!node_modules/@qualirec/shared"
-    ],
-    "asarUnpack": [
-      "node_modules/better-sqlite3/**/*",
-      "node_modules/.prisma/**/*",
-      "node_modules/@prisma/**/*",
-      "prisma/**/*"
     ]
   }
 }

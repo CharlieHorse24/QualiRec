@@ -6,7 +6,7 @@
   "private": true,
   "main": "dist/main.js",
   "scripts": {
-    "build:prisma": "prisma generate --schema=prisma/schema.prisma",
+    "build:prisma": "prisma generate --schema=prisma/schema.prisma && cp -r node_modules/.prisma/client/* ../../node_modules/.prisma/client/ 2>/dev/null || true",
     "build:schema-sql": "prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script | sed 's/CREATE TABLE/CREATE TABLE IF NOT EXISTS/g; s/CREATE UNIQUE INDEX/CREATE UNIQUE INDEX IF NOT EXISTS/g' > prisma/init.sql",
     "build:api": "tsc -p tsconfig.main.json",
     "build:web": "cd ../web && npx vite build --outDir=../desktop/dist/web --emptyOutDir",
@@ -15,7 +15,9 @@
     "dev": "npm run build:all && electron dist/main.js",
     "pack": "npm run build:all && electron-builder --dir",
     "dist": "npm run build:all && electron-builder",
-    "dist:mac": "npm run build:all && electron-builder --mac"
+    "dist:mac": "npm run build:all && electron-builder --mac",
+    "start:web": "node dist/start-web.js",
+    "dev:web": "npm run build:all && node dist/start-web.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",

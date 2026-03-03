@@ -36,7 +36,7 @@ export function ProgressBar({ sections, answers, currentIndex, onSelectQuestion 
                   onClick={() => onSelectQuestion(idx)}
                   className={cn(
                     'w-6 h-6 rounded-full text-[10px] font-medium flex items-center justify-center transition-all',
-                    isCurrent && 'ring-2 ring-teal-500 ring-offset-1',
+                    isCurrent && 'ring-2 ring-brand-500 ring-offset-1',
                     isAnswered && 'bg-green-100 text-green-700',
                     isFlagged && 'bg-amber-100 text-amber-700',
                     isSkipped && 'bg-gray-100 text-gray-500',

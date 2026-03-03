@@ -12,7 +12,7 @@ export function Badge({ variant = 'default', children, className }: BadgeProps) 
     success: 'bg-green-100 text-green-700',
     warning: 'bg-amber-100 text-amber-700',
     danger: 'bg-red-100 text-red-700',
-    info: 'bg-teal-100 text-teal-700',
+    info: 'bg-brand-100 text-brand-700',
   };
 
   return (

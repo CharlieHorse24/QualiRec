@@ -3,7 +3,7 @@ import { useSessionStore } from '@/store/sessionStore';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
 import type { TemplateQuestion, SessionAnswer, AnswerStatus } from '@qualirec/shared';
-import { Flag, SkipForward, Check, HelpCircle } from 'lucide-react';
+import { Flag, SkipForward, Check, HelpCircle, StickyNote } from 'lucide-react';
 
 interface QuestionPanelProps {
   question: TemplateQuestion;
@@ -51,7 +51,7 @@ export function QuestionPanel({ question, answer, sessionId, isActive, compact }
   };
 
   const handleFlag = () => {
-    updateAnswer(question.id, answer?.responseValue ?? textValue || null, notes, 'FLAGGED');
+    updateAnswer(question.id, answer?.responseValue ?? (textValue || null), notes, 'FLAGGED');
   };
 
   const statusColor = answer?.status === 'ANSWERED' ? 'border-green-300' :
@@ -137,7 +137,7 @@ export function QuestionPanel({ question, answer, sessionId, isActive, compact }
                 className={cn(
                   'px-6 py-2 rounded-md border-2 text-sm font-medium transition-all',
                   textValue === opt
-                    ? 'border-teal-500 bg-teal-50 text-teal-700'
+                    ? 'border-brand-500 bg-brand-50 text-brand-700'
                     : 'border-gray-200 hover:border-gray-300 text-gray-600',
                 )}
               >
@@ -160,7 +160,7 @@ export function QuestionPanel({ question, answer, sessionId, isActive, compact }
                 className={cn(
                   'px-4 py-2 rounded-full border text-sm font-medium transition-all',
                   textValue === opt
-                    ? 'border-teal-500 bg-teal-50 text-teal-700'
+                    ? 'border-brand-500 bg-brand-50 text-brand-700'
                     : 'border-gray-200 hover:border-gray-300 text-gray-600',
                 )}
               >
@@ -190,7 +190,7 @@ export function QuestionPanel({ question, answer, sessionId, isActive, compact }
                   className={cn(
                     'px-4 py-2 rounded-full border text-sm font-medium transition-all',
                     selected
-                      ? 'border-teal-500 bg-teal-50 text-teal-700'
+                      ? 'border-brand-500 bg-brand-50 text-brand-700'
                       : 'border-gray-200 hover:border-gray-300 text-gray-600',
                   )}
                 >

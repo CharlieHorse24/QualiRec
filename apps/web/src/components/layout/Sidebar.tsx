@@ -34,13 +34,11 @@ export function Sidebar() {
   ];
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-navy-900 text-white flex flex-col z-40">
+    <aside className="fixed left-0 top-0 h-screen w-64 bg-navy-950 text-white flex flex-col z-40">
       {/* Logo */}
-      <div className="px-6 py-5 border-b border-navy-800">
-        <h1 className="text-xl font-bold tracking-tight">
-          <span className="text-teal-400">Quali</span>Rec
-        </h1>
-        <p className="text-xs text-navy-400 mt-1">Recruiter Qualification Platform</p>
+      <div className="px-5 py-4 border-b border-navy-800">
+        <img src="/logo.svg" alt="QualiRec" className="h-10 w-auto" />
+        <p className="text-xs text-navy-400 mt-1.5">Recruiter Qualification Platform</p>
       </div>
 
       {/* Navigation */}
@@ -85,7 +83,7 @@ export function Sidebar() {
       {/* User Info */}
       <div className="px-3 py-4 border-t border-navy-800">
         <div className="flex items-center gap-3 px-3 py-2">
-          <div className="w-8 h-8 rounded-full bg-teal-600 flex items-center justify-center text-sm font-medium">
+          <div className="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-sm font-medium">
             {user?.name?.charAt(0) || 'U'}
           </div>
           <div className="flex-1 min-w-0">

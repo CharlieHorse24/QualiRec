@@ -49,20 +49,20 @@ export function AdminSettingsPage() {
       <Card>
         <CardHeader>
           <CardTitle>
-            <Phone className="w-5 h-5 inline mr-2 text-teal-600" />
+            <Phone className="w-5 h-5 inline mr-2 text-brand-600" />
             VOIP / Meeting Integrations
           </CardTitle>
         </CardHeader>
         {isLoading ? (
-          <div className="animate-spin w-5 h-5 border-2 border-teal-600 border-t-transparent rounded-full mx-auto" />
+          <div className="animate-spin w-5 h-5 border-2 border-brand-600 border-t-transparent rounded-full mx-auto" />
         ) : (
           <div className="space-y-3">
             {voipAdapters.map((adapter) => (
               <div key={adapter.name} className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${adapter.isConfigured ? 'bg-teal-50' : 'bg-gray-50'}`}>
+                  <div className={`p-2 rounded-lg ${adapter.isConfigured ? 'bg-brand-50' : 'bg-gray-50'}`}>
                     {adapter.isConnected ? (
-                      <Wifi className="w-5 h-5 text-teal-600" />
+                      <Wifi className="w-5 h-5 text-brand-600" />
                     ) : (
                       <WifiOff className="w-5 h-5 text-gray-400" />
                     )}
@@ -100,7 +100,7 @@ export function AdminSettingsPage() {
       <Card>
         <CardHeader>
           <CardTitle>
-            <Database className="w-5 h-5 inline mr-2 text-teal-600" />
+            <Database className="w-5 h-5 inline mr-2 text-brand-600" />
             CRM Integrations
           </CardTitle>
         </CardHeader>
@@ -137,7 +137,7 @@ export function AdminSettingsPage() {
       <Card>
         <CardHeader>
           <CardTitle>
-            <Settings className="w-5 h-5 inline mr-2 text-teal-600" />
+            <Settings className="w-5 h-5 inline mr-2 text-brand-600" />
             Webhook URLs
           </CardTitle>
         </CardHeader>

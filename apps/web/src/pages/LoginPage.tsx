@@ -21,13 +21,11 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-navy-950">
+    <div className="min-h-screen flex items-center justify-center bg-black">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white">
-            <span className="text-teal-400">Quali</span>Rec
-          </h1>
-          <p className="text-navy-400 mt-2">Recruiter Qualification Platform</p>
+        <div className="flex flex-col items-center mb-8">
+          <img src="/logo.svg" alt="QualiRec" className="h-16 w-auto" />
+          <p className="text-navy-400 mt-3">Recruiter Qualification Platform</p>
         </div>
 
         <div className="bg-white rounded-lg shadow-xl p-8">

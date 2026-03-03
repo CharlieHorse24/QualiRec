@@ -86,11 +86,11 @@ export function NewCallPage() {
             onClick={() => setSelectedType('CANDIDATE')}
             className={`p-4 rounded-lg border-2 transition-all ${
               selectedType === 'CANDIDATE'
-                ? 'border-teal-500 bg-teal-50'
+                ? 'border-brand-500 bg-brand-50'
                 : 'border-gray-200 hover:border-gray-300'
             }`}
           >
-            <User className={`w-8 h-8 mb-2 ${selectedType === 'CANDIDATE' ? 'text-teal-600' : 'text-gray-400'}`} />
+            <User className={`w-8 h-8 mb-2 ${selectedType === 'CANDIDATE' ? 'text-brand-600' : 'text-gray-400'}`} />
             <p className="font-medium text-navy-900">Candidate</p>
             <p className="text-xs text-gray-500 mt-1">Qualify a job seeker</p>
           </button>
@@ -98,11 +98,11 @@ export function NewCallPage() {
             onClick={() => setSelectedType('CLIENT')}
             className={`p-4 rounded-lg border-2 transition-all ${
               selectedType === 'CLIENT'
-                ? 'border-teal-500 bg-teal-50'
+                ? 'border-brand-500 bg-brand-50'
                 : 'border-gray-200 hover:border-gray-300'
             }`}
           >
-            <Building2 className={`w-8 h-8 mb-2 ${selectedType === 'CLIENT' ? 'text-teal-600' : 'text-gray-400'}`} />
+            <Building2 className={`w-8 h-8 mb-2 ${selectedType === 'CLIENT' ? 'text-brand-600' : 'text-gray-400'}`} />
             <p className="font-medium text-navy-900">Client</p>
             <p className="text-xs text-gray-500 mt-1">Qualify a hiring company</p>
           </button>
@@ -119,7 +119,7 @@ export function NewCallPage() {
               onClick={() => setSelectedTemplateId(template.id)}
               className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
                 selectedTemplateId === template.id
-                  ? 'border-teal-500 bg-teal-50'
+                  ? 'border-brand-500 bg-brand-50'
                   : 'border-gray-200 hover:border-gray-300'
               }`}
             >
@@ -178,7 +178,7 @@ export function NewCallPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-navy-800 rounded-lg">
-              <Phone className="w-5 h-5 text-teal-400" />
+              <Phone className="w-5 h-5 text-brand-400" />
             </div>
             <div>
               <p className="font-medium">Manual Mode</p>
@@ -189,7 +189,7 @@ export function NewCallPage() {
             onClick={handleStartCall}
             loading={isLoading}
             disabled={!selectedTemplateId}
-            className="bg-teal-500 hover:bg-teal-600"
+            className="bg-brand-500 hover:bg-brand-600"
           >
             Start Session <ArrowRight className="w-4 h-4 ml-2" />
           </Button>

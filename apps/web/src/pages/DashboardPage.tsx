@@ -60,7 +60,7 @@ export function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin w-8 h-8 border-4 border-teal-600 border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-brand-600 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -82,8 +82,8 @@ export function DashboardPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <div className="flex items-center gap-4">
-            <div className="p-3 bg-teal-50 rounded-lg">
-              <Phone className="w-6 h-6 text-teal-600" />
+            <div className="p-3 bg-brand-50 rounded-lg">
+              <Phone className="w-6 h-6 text-brand-600" />
             </div>
             <div>
               <p className="text-sm text-gray-500">Calls Today</p>

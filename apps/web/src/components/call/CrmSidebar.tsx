@@ -63,14 +63,14 @@ export function CrmSidebar({ session, onClose }: CrmSidebarProps) {
       <div className="flex-1 overflow-y-auto p-4">
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
-            <div className="animate-spin w-5 h-5 border-2 border-teal-600 border-t-transparent rounded-full" />
+            <div className="animate-spin w-5 h-5 border-2 border-brand-600 border-t-transparent rounded-full" />
           </div>
         ) : contact ? (
           <div className="space-y-4">
             {/* Contact Card */}
             <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-teal-100 mx-auto flex items-center justify-center">
-                <User className="w-8 h-8 text-teal-600" />
+              <div className="w-16 h-16 rounded-full bg-brand-100 mx-auto flex items-center justify-center">
+                <User className="w-8 h-8 text-brand-600" />
               </div>
               <h3 className="font-medium text-navy-900 mt-3">
                 {contact.firstName} {contact.lastName}

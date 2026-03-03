@@ -109,7 +109,7 @@ export function CallSessionPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin w-8 h-8 border-4 border-teal-600 border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-brand-600 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -137,7 +137,7 @@ export function CallSessionPage() {
               {isTimerRunning ? 'On Call' : 'Call Ended'}
             </span>
           </div>
-          <Badge variant="info" className="bg-navy-800 text-teal-400 border border-navy-700">
+          <Badge variant="info" className="bg-navy-800 text-brand-400 border border-navy-700">
             <Wifi className="w-3 h-3 mr-1" />
             {activeSession.voipAdapter === 'manual' ? 'Manual Mode' : activeSession.voipAdapter}
           </Badge>
@@ -149,7 +149,7 @@ export function CallSessionPage() {
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="font-mono text-lg font-semibold tabular-nums text-teal-400">
+          <div className="font-mono text-lg font-semibold tabular-nums text-brand-400">
             {formatDuration(callTimer)}
           </div>
           <div className="flex items-center gap-2">
@@ -197,7 +197,7 @@ export function CallSessionPage() {
             <div className="max-w-3xl mx-auto p-8">
               {/* Section Header */}
               <div className="mb-6">
-                <p className="text-sm text-teal-600 font-medium">{currentSectionTitle}</p>
+                <p className="text-sm text-brand-600 font-medium">{currentSectionTitle}</p>
                 <p className="text-xs text-gray-400 mt-1">
                   Question {questionInSectionIndex + 1} of {questionsInSection}
                 </p>

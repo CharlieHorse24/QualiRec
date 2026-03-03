@@ -129,7 +129,7 @@ export function TemplatesPage() {
             onClick={() => setFilter(type)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
               filter === type
-                ? 'bg-teal-600 text-white'
+                ? 'bg-brand-600 text-white'
                 : 'bg-white text-gray-600 hover:bg-gray-50 border'
             }`}
           >
@@ -141,7 +141,7 @@ export function TemplatesPage() {
       {/* Templates Grid */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <div className="animate-spin w-6 h-6 border-2 border-teal-600 border-t-transparent rounded-full" />
+          <div className="animate-spin w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full" />
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -149,7 +149,7 @@ export function TemplatesPage() {
             <Card key={template.id} className="hover:border-gray-300 transition-colors">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-teal-600" />
+                  <FileText className="w-5 h-5 text-brand-600" />
                   <Badge variant={template.type === 'CANDIDATE' ? 'info' : template.type === 'CLIENT' ? 'default' : 'warning'}>
                     {template.type}
                   </Badge>

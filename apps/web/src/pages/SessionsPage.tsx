@@ -109,7 +109,7 @@ export function SessionsPage() {
       <Card padding={false}>
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin w-6 h-6 border-2 border-teal-600 border-t-transparent rounded-full" />
+            <div className="animate-spin w-6 h-6 border-2 border-brand-600 border-t-transparent rounded-full" />
           </div>
         ) : (
           <>

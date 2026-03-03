@@ -117,7 +117,7 @@ export function SessionDetailPage() {
   if (isLoading || !session) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin w-8 h-8 border-4 border-teal-600 border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-4 border-brand-600 border-t-transparent rounded-full" />
       </div>
     );
   }
@@ -158,7 +158,7 @@ export function SessionDetailPage() {
       <Card>
         <CardHeader>
           <CardTitle>
-            <FileText className="w-5 h-5 inline mr-2 text-teal-600" />
+            <FileText className="w-5 h-5 inline mr-2 text-brand-600" />
             Qualification Responses
           </CardTitle>
         </CardHeader>
@@ -220,7 +220,7 @@ export function SessionDetailPage() {
       <Card>
         <CardHeader>
           <CardTitle>
-            <Sparkles className="w-5 h-5 inline mr-2 text-teal-600" />
+            <Sparkles className="w-5 h-5 inline mr-2 text-brand-600" />
             Call Summary
           </CardTitle>
           <div className="flex gap-2">
@@ -309,7 +309,7 @@ export function SessionDetailPage() {
       <Card>
         <CardHeader>
           <CardTitle>
-            <Upload className="w-5 h-5 inline mr-2 text-teal-600" />
+            <Upload className="w-5 h-5 inline mr-2 text-brand-600" />
             CRM Sync
           </CardTitle>
           {session.crmSyncStatus !== 'COMPLETED' && (
@@ -360,7 +360,7 @@ export function SessionDetailPage() {
 
           {searchingCrm ? (
             <div className="flex items-center gap-2 text-sm text-gray-500">
-              <div className="animate-spin w-4 h-4 border-2 border-teal-600 border-t-transparent rounded-full" />
+              <div className="animate-spin w-4 h-4 border-2 border-brand-600 border-t-transparent rounded-full" />
               Searching CRM for matching contacts...
             </div>
           ) : crmMatches.length > 0 ? (

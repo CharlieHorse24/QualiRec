@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" fill="none">
+  <defs>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F48FB1"/>
+      <stop offset="50%" stop-color="#F06292"/>
+      <stop offset="100%" stop-color="#FF0080"/>
+    </linearGradient>
+  </defs>
+  <!-- Pixel Cross Icon -->
+  <rect x="20" y="8" width="14" height="14" fill="#00E5FF"/>
+  <rect x="34" y="8" width="14" height="14" fill="#00BCD4"/>
+  <rect x="6" y="22" width="14" height="14" fill="#00E5FF"/>
+  <rect x="20" y="22" width="14" height="14" fill="#2979FF"/>
+  <rect x="34" y="22" width="14" height="14" fill="#0066FF"/>
+  <rect x="48" y="22" width="14" height="14" fill="#0066FF"/>
+  <rect x="6" y="36" width="14" height="14" fill="#FFD700"/>
+  <rect x="20" y="36" width="14" height="14" fill="#2979FF"/>
+  <rect x="6" y="50" width="14" height="14" fill="#FFD700"/>
+  <rect x="20" y="50" width="14" height="14" fill="#FFC107"/>
+  <!-- Text -->
+  <text x="74" y="55" font-family="system-ui, -apple-system, sans-serif" font-size="42" font-weight="700" letter-spacing="-0.5" fill="url(#textGrad)">QualiRec</text>
+</svg>

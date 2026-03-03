@@ -14,15 +14,15 @@
     --card-foreground: 222 47% 11%;
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --primary: 176 62% 44%;
+    --primary: 334 83% 51%;
     --primary-foreground: 0 0% 100%;
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
-    --accent: 210 40% 96%;
+    --accent: 186 100% 45%;
     --accent-foreground: 222 47% 11%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --ring: 176 62% 44%;
+    --ring: 334 83% 51%;
     --radius: 0.5rem;
   }
 
@@ -37,11 +37,11 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-teal-600 hover:bg-teal-700 text-white font-medium px-4 py-2 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+    @apply bg-brand-600 hover:bg-brand-700 text-white font-medium px-4 py-2 rounded-md transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2;
   }
 
   .btn-secondary {
-    @apply bg-white hover:bg-gray-50 text-navy-800 font-medium px-4 py-2 rounded-md border border-gray-300 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
+    @apply bg-white hover:bg-gray-50 text-navy-800 font-medium px-4 py-2 rounded-md border border-gray-300 transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2;
   }
 
   .btn-danger {
@@ -53,7 +53,7 @@
   }
 
   .input-field {
-    @apply w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-shadow;
+    @apply w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-shadow;
   }
 
   .sidebar-link {
@@ -61,7 +61,7 @@
   }
 
   .sidebar-link-active {
-    @apply bg-navy-800 text-white;
+    @apply bg-navy-800 text-white border-l-2 border-brand-500;
   }
 }
 

@@ -52,7 +52,7 @@
       "target": [
         {
           "target": "zip",
-          "arch": ["arm64", "x64"]
+          "arch": ["arm64"]
         }
       ],
       "hardenedRuntime": true,
@@ -62,14 +62,18 @@
       "dist/**/*",
       "prisma/**/*",
       "node_modules/**/*",
-      "node_modules/.prisma/**/*",
+      {
+        "from": "node_modules/.prisma",
+        "to": "node_modules/.prisma",
+        "filter": ["**/*", "!**/*debian*", "!**/*rhel*", "!**/*musl*"]
+      },
       "!node_modules/.cache",
-      "!node_modules/@qualirec/shared"
+      "!node_modules/@qualirec/shared",
+      "!node_modules/@prisma/engines"
     ],
     "asarUnpack": [
       "node_modules/better-sqlite3/**/*",
-      "node_modules/.prisma/**/*",
-      "node_modules/@prisma/engines/**/*",
+      "node_modules/.prisma/**/*.node",
       "prisma/**/*"
     ]
   }

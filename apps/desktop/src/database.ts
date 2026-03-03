@@ -35,7 +35,9 @@ export async function initDatabase(): Promise<void> {
   // For desktop, we use db push approach via Prisma's built-in
   // The schema is pushed on first run
   const { execSync } = require('child_process');
-  const prismaDir = path.join(__dirname, '..', 'prisma');
+  // In packaged app, asar-unpacked files are at app.asar.unpacked/ instead of app.asar/
+  const baseDir = __dirname.replace('app.asar', 'app.asar.unpacked');
+  const prismaDir = path.join(baseDir, '..', 'prisma');
 
   try {
     execSync(

@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS "call_sessions" (
     "duration" INTEGER,
     "status" TEXT NOT NULL DEFAULT 'IN_PROGRESS',
     "floatingNotes" TEXT,
+    "transcript" TEXT,
     "summary" TEXT,
     "crmSyncStatus" TEXT NOT NULL DEFAULT 'PENDING',
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

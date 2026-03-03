@@ -198,5 +198,36 @@ export function createSessionRoutes(): Router {
     res.json({ success: true, data: updated });
   });
 
+  // Append transcript chunks
+  router.put('/:id/transcript', authenticate, async (req: Request, res: Response) => {
+    const { chunks } = req.body;
+    if (!chunks || !Array.isArray(chunks)) throw new AppError(400, 'chunks array is required');
+
+    const session = await prisma.callSession.findUnique({ where: { id: req.params.id } });
+    if (!session) throw new AppError(404, 'Session not found');
+    if (session.recruiterId !== req.user!.userId) throw new AppError(403, 'Not your session');
+
+    const existing: Array<Record<string, unknown>> = session.transcript ? JSON.parse(session.transcript) : [];
+    const merged = [...existing, ...chunks];
+
+    await prisma.callSession.update({
+      where: { id: req.params.id },
+      data: { transcript: JSON.stringify(merged) },
+    });
+
+    res.json({ success: true, data: { chunkCount: merged.length } });
+  });
+
+  // Get full transcript
+  router.get('/:id/transcript', authenticate, async (req: Request, res: Response) => {
+    const session = await prisma.callSession.findUnique({ where: { id: req.params.id } });
+    if (!session) throw new AppError(404, 'Session not found');
+
+    const chunks: Array<{ text: string; timestamp: string; speaker?: string }> = session.transcript ? JSON.parse(session.transcript) : [];
+    const fullText = chunks.map((c) => c.text).join(' ');
+
+    res.json({ success: true, data: { chunks, fullText } });
+  });
+
   return router;
 }

@@ -70,6 +70,7 @@ model CallSession {
   duration        Int?
   status          String   @default("IN_PROGRESS")
   floatingNotes   String?
+  transcript      String?
   summary         String?
   crmSyncStatus   String   @default("PENDING")
   createdAt       DateTime @default(now())

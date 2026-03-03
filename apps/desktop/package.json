@@ -62,7 +62,8 @@
       "dist/**/*",
       "prisma/**/*",
       "node_modules/**/*",
-      "!node_modules/.cache"
+      "!node_modules/.cache",
+      "!node_modules/@qualirec/shared"
     ],
     "asarUnpack": [
       "node_modules/better-sqlite3/**/*",

@@ -1,0 +1,82 @@
+import { useState, FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/store/authStore';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+
+export function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { login, isLoading, error, clearError } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    clearError();
+    await login(email, password);
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/');
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-navy-950">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white">
+            <span className="text-teal-400">Quali</span>Rec
+          </h1>
+          <p className="text-navy-400 mt-2">Recruiter Qualification Platform</p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-xl p-8">
+          <h2 className="text-xl font-semibold text-navy-900 mb-6">Sign in to your account</h2>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <Input
+              id="email"
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@company.com"
+              required
+              autoFocus
+            />
+
+            <Input
+              id="password"
+              label="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+            />
+
+            <Button type="submit" loading={isLoading} className="w-full">
+              Sign In
+            </Button>
+          </form>
+
+          <div className="mt-6 p-4 bg-gray-50 rounded-md">
+            <p className="text-xs text-gray-500 mb-2">Demo accounts:</p>
+            <p className="text-xs text-gray-600">
+              <strong>Admin:</strong> admin@qualirec.com / admin123
+            </p>
+            <p className="text-xs text-gray-600">
+              <strong>Recruiter:</strong> recruiter@qualirec.com / recruiter123
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

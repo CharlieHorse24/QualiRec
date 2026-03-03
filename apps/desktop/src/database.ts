@@ -27,7 +27,9 @@ export async function initDatabase(): Promise<void> {
   process.env.DATABASE_URL = dbUrl;
 
   // Initialize schema using better-sqlite3 (works in packaged app unlike npx prisma)
-  const prismaDir = path.join(__dirname, '..', 'prisma');
+  // In packaged app, prisma/ is in app.asar.unpacked (asarUnpack config)
+  const baseDir = __dirname.replace('app.asar', 'app.asar.unpacked');
+  const prismaDir = path.join(baseDir, '..', 'prisma');
   const initSqlPath = path.join(prismaDir, 'init.sql');
 
   try {

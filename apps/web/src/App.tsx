@@ -12,6 +12,9 @@ import { TemplatesPage } from '@/pages/TemplatesPage';
 import { TemplateEditorPage } from '@/pages/TemplateEditorPage';
 import { AdminUsersPage } from '@/pages/AdminUsersPage';
 import { AdminSettingsPage } from '@/pages/AdminSettingsPage';
+import { DemoLandingPage } from '@/pages/demo/DemoLandingPage';
+import { DemoCallPage } from '@/pages/demo/DemoCallPage';
+import { DemoSummaryPage } from '@/pages/demo/DemoSummaryPage';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { token, user, isLoading } = useAuthStore();
@@ -52,6 +55,11 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+
+        {/* Demo Routes — no auth required */}
+        <Route path="/demo" element={<DemoLandingPage />} />
+        <Route path="/demo/call" element={<DemoCallPage />} />
+        <Route path="/demo/summary" element={<DemoSummaryPage />} />
 
         <Route
           element={

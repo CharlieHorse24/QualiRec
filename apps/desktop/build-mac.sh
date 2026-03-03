@@ -32,6 +32,8 @@ npx vite build --outDir=../desktop/dist/web --emptyOutDir
 cd ../desktop
 
 echo "[5/5] Packaging macOS application..."
+# Remove workspace symlinks that electron-builder can't resolve outside the app directory
+rm -rf node_modules/@qualirec 2>/dev/null || true
 npx electron-builder --mac
 
 echo ""

@@ -1,6 +1,3 @@
--- Auto-generated from prisma/schema.prisma
--- Used by the packaged Electron app to initialize the SQLite database
-
 -- CreateTable
 CREATE TABLE IF NOT EXISTS "users" (
     "id" TEXT NOT NULL PRIMARY KEY,
@@ -175,3 +172,4 @@ CREATE UNIQUE INDEX IF NOT EXISTS "session_answers_sessionId_questionId_key" ON 
 
 -- CreateIndex
 CREATE UNIQUE INDEX IF NOT EXISTS "integration_configs_userId_adapterType_adapterName_key" ON "integration_configs"("userId", "adapterType", "adapterName");
+

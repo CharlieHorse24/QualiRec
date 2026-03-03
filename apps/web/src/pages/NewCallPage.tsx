@@ -7,8 +7,8 @@ import { Select } from '@/components/ui/Select';
 import { Badge } from '@/components/ui/Badge';
 import { useSessionStore } from '@/store/sessionStore';
 import { api } from '@/lib/api';
-import type { Template, ContactType } from '@qualirec/shared';
-import { Phone, User, Building2, ArrowRight } from 'lucide-react';
+import type { Template, ContactType, VoipAdapterInfo } from '@qualirec/shared';
+import { Phone, User, Building2, ArrowRight, Wifi, Mic } from 'lucide-react';
 
 export function NewCallPage() {
   const [templates, setTemplates] = useState<Template[]>([]);
@@ -19,15 +19,20 @@ export function NewCallPage() {
   const [contactPhone, setContactPhone] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  // VOIP adapter selection
+  const [voipAdapters, setVoipAdapters] = useState<VoipAdapterInfo[]>([]);
+  const [selectedVoip, setSelectedVoip] = useState('manual');
+  const [meetLink, setMeetLink] = useState('');
+
   const { startSession } = useSessionStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     loadTemplates();
+    loadVoipAdapters();
   }, []);
 
   useEffect(() => {
-    // Auto-select default template for type
     const defaultTemplate = templates.find(
       (t) => t.type === selectedType && t.isDefault,
     );
@@ -50,6 +55,24 @@ export function NewCallPage() {
     }
   }
 
+  async function loadVoipAdapters() {
+    try {
+      const res = await api.getVoipAdapters();
+      if (res.success && res.data) {
+        setVoipAdapters(res.data);
+        // Auto-select a configured adapter other than manual
+        const configured = res.data.filter((a) => a.isConfigured && a.name !== 'manual');
+        if (configured.length > 0) {
+          // Prefer dialpad or googlemeet if available
+          const preferred = configured.find((a) => a.name === 'dialpad' || a.name === 'googlemeet');
+          setSelectedVoip(preferred?.name || configured[0].name);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load VOIP adapters:', err);
+    }
+  }
+
   async function handleStartCall() {
     if (!selectedTemplateId) return;
     setIsLoading(true);
@@ -60,7 +83,7 @@ export function NewCallPage() {
       contactName: contactName || undefined,
       contactEmail: contactEmail || undefined,
       contactPhone: contactPhone || undefined,
-      voipAdapter: 'manual',
+      voipAdapter: selectedVoip,
     });
 
     if (sessionId) {
@@ -70,6 +93,8 @@ export function NewCallPage() {
   }
 
   const filteredTemplates = templates.filter((t) => t.type === selectedType);
+  const selectedAdapterInfo = voipAdapters.find((a) => a.name === selectedVoip);
+  const configuredAdapters = voipAdapters.filter((a) => a.isConfigured || a.name === 'manual');
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
@@ -145,7 +170,7 @@ export function NewCallPage() {
       <Card>
         <CardTitle className="mb-4">Contact Information (Optional)</CardTitle>
         <p className="text-sm text-gray-500 mb-4">
-          Pre-fill contact details if known. Can also be added during or after the call.
+          Pre-fill contact details if known. Can also be auto-detected from the call transcript.
         </p>
         <div className="space-y-3">
           <Input
@@ -173,16 +198,77 @@ export function NewCallPage() {
         </div>
       </Card>
 
-      {/* Call Status Banner */}
+      {/* VOIP / Call Mode Selection */}
+      <Card>
+        <CardTitle className="mb-4">
+          <Phone className="w-5 h-5 inline mr-2 text-brand-600" />
+          Call Mode
+        </CardTitle>
+        <div className="space-y-3">
+          {configuredAdapters.map((adapter) => (
+            <button
+              key={adapter.name}
+              onClick={() => setSelectedVoip(adapter.name)}
+              className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                selectedVoip === adapter.name
+                  ? 'border-brand-500 bg-brand-50'
+                  : 'border-gray-200 hover:border-gray-300'
+              }`}
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Wifi className={`w-5 h-5 ${selectedVoip === adapter.name ? 'text-brand-600' : 'text-gray-400'}`} />
+                  <div>
+                    <p className="font-medium text-navy-900">{adapter.displayName}</p>
+                    <p className="text-xs text-gray-500">
+                      {adapter.name === 'manual'
+                        ? 'No integration — use live transcription from your microphone'
+                        : adapter.name === 'dialpad'
+                          ? 'Auto-detect calls via Dialpad'
+                          : adapter.name === 'googlemeet'
+                            ? 'Google Meet with calendar detection'
+                            : `Connected via ${adapter.displayName}`}
+                    </p>
+                  </div>
+                </div>
+                {adapter.name !== 'manual' && (
+                  <Badge variant="success">Connected</Badge>
+                )}
+              </div>
+            </button>
+          ))}
+
+          {/* Google Meet link input */}
+          {selectedVoip === 'googlemeet' && (
+            <div className="pl-10">
+              <Input
+                label="Google Meet Link (Optional)"
+                value={meetLink}
+                onChange={(e) => setMeetLink(e.target.value)}
+                placeholder="https://meet.google.com/abc-defg-hij"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Paste a Meet link or leave blank to auto-detect from your calendar
+              </p>
+            </div>
+          )}
+        </div>
+      </Card>
+
+      {/* Start Session Banner */}
       <Card className="bg-navy-900 text-white border-navy-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-navy-800 rounded-lg">
-              <Phone className="w-5 h-5 text-brand-400" />
+              <Mic className="w-5 h-5 text-brand-400" />
             </div>
             <div>
-              <p className="font-medium">Manual Mode</p>
-              <p className="text-sm text-navy-400">No VOIP integration — manually track your call</p>
+              <p className="font-medium">
+                {selectedAdapterInfo?.displayName || 'Manual Mode'}
+              </p>
+              <p className="text-sm text-navy-400">
+                Live transcription will auto-fill qualification answers from your call
+              </p>
             </div>
           </div>
           <Button

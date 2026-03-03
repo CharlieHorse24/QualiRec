@@ -16,12 +16,16 @@ import { ManualVoipAdapter } from './manual';
 import { ZoomVoipAdapter } from './zoom';
 import { TeamsVoipAdapter } from './teams';
 import { TwilioVoipAdapter } from './twilio';
+import { DialpadVoipAdapter } from './dialpad';
+import { GoogleMeetVoipAdapter } from './googlemeet';
 
 const adapters: Record<string, VoipAdapter> = {
   manual: new ManualVoipAdapter(),
   zoom: new ZoomVoipAdapter(),
   teams: new TeamsVoipAdapter(),
   twilio: new TwilioVoipAdapter(),
+  dialpad: new DialpadVoipAdapter(),
+  googlemeet: new GoogleMeetVoipAdapter(),
 };
 
 export function getVoipAdapter(name: string): VoipAdapter {

@@ -4,6 +4,8 @@ import { getVoipAdapter } from '../adapters/voip';
 import { ZoomVoipAdapter } from '../adapters/voip/zoom';
 import { TwilioVoipAdapter } from '../adapters/voip/twilio';
 import { TeamsVoipAdapter } from '../adapters/voip/teams';
+import { DialpadVoipAdapter } from '../adapters/voip/dialpad';
+import { GoogleMeetVoipAdapter } from '../adapters/voip/googlemeet';
 
 const router = Router();
 
@@ -55,6 +57,26 @@ router.post('/teams', (req: Request, res: Response) => {
   }
 
   res.status(202).json({ status: 'ok' });
+});
+
+// Dialpad webhook
+router.post('/dialpad', (req: Request, res: Response) => {
+  const adapter = getVoipAdapter('dialpad') as DialpadVoipAdapter;
+  adapter.handleWebhook(req.body);
+  res.json({ status: 'ok' });
+});
+
+// Google Meet / Calendar push notification
+router.post('/googlemeet', (req: Request, res: Response) => {
+  const adapter = getVoipAdapter('googlemeet') as GoogleMeetVoipAdapter;
+  // Merge headers into payload for Google Calendar push notifications
+  const payload = {
+    ...req.body,
+    'X-Goog-Resource-State': req.headers['x-goog-resource-state'],
+    'X-Goog-Resource-ID': req.headers['x-goog-resource-id'],
+  };
+  adapter.handleWebhook(payload);
+  res.status(200).json({ status: 'ok' });
 });
 
 export default router;

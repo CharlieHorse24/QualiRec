@@ -101,8 +101,8 @@ export function SessionDetailPage() {
   async function handleCrmSync(action: 'CREATE' | 'UPDATE', contactId?: string) {
     setIsSyncing(true);
     try {
+      // Don't specify adapter — the server will auto-detect HubSpot if configured
       await api.syncToCrm(id!, {
-        adapter: 'mock',
         contactAction: action,
         contactId,
       });

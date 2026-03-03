@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
 import { api } from '@/lib/api';
 import type { CallSession, CrmContact } from '@qualirec/shared';
 import { X, User, Building2, Mail, Phone, ExternalLink } from 'lucide-react';
@@ -13,6 +12,11 @@ interface CrmSidebarProps {
 export function CrmSidebar({ session, onClose }: CrmSidebarProps) {
   const [contact, setContact] = useState<CrmContact | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [activeAdapter, setActiveAdapter] = useState<string>('mock');
+
+  useEffect(() => {
+    loadActiveAdapter();
+  }, []);
 
   useEffect(() => {
     if (session.crmContactId) {
@@ -20,7 +24,18 @@ export function CrmSidebar({ session, onClose }: CrmSidebarProps) {
     } else if (session.contactEmail || session.contactName) {
       searchContact();
     }
-  }, [session.crmContactId, session.contactEmail, session.contactName]);
+  }, [session.crmContactId, session.contactEmail, session.contactName, activeAdapter]);
+
+  async function loadActiveAdapter() {
+    try {
+      const res = await api.getActiveCrmAdapter();
+      if (res.success && res.data) {
+        setActiveAdapter(res.data.adapter);
+      }
+    } catch {
+      // fallback to mock
+    }
+  }
 
   async function loadContact(id: string) {
     setIsLoading(true);
@@ -54,7 +69,12 @@ export function CrmSidebar({ session, onClose }: CrmSidebarProps) {
   return (
     <div className="w-72 border-l bg-white flex flex-col animate-slide-in-right shrink-0">
       <div className="flex items-center justify-between px-4 py-3 border-b">
-        <span className="text-sm font-medium text-navy-900">CRM Profile</span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-navy-900">CRM Profile</span>
+          <Badge variant={activeAdapter === 'hubspot' ? 'success' : 'default'} className="text-[10px]">
+            {activeAdapter === 'hubspot' ? 'HubSpot' : activeAdapter === 'mock' ? 'Local' : activeAdapter}
+          </Badge>
+        </div>
         <button onClick={onClose} className="p-1 rounded hover:bg-gray-100">
           <X className="w-4 h-4 text-gray-500" />
         </button>
@@ -103,6 +123,19 @@ export function CrmSidebar({ session, onClose }: CrmSidebarProps) {
               )}
             </div>
 
+            {/* HubSpot Deep Link */}
+            {activeAdapter === 'hubspot' && contact.externalId && (
+              <a
+                href={`https://app.hubspot.com/contacts/${contact.externalId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-xs text-brand-600 hover:text-brand-700 mt-2"
+              >
+                <ExternalLink className="w-3 h-3" />
+                View in HubSpot
+              </a>
+            )}
+
             {/* Custom Fields */}
             {contact.fields && Object.keys(contact.fields).length > 0 && (
               <div className="border-t pt-3">
@@ -123,7 +156,9 @@ export function CrmSidebar({ session, onClose }: CrmSidebarProps) {
             <User className="w-12 h-12 text-gray-300 mx-auto" />
             <p className="text-sm text-gray-500 mt-3">No CRM contact linked</p>
             <p className="text-xs text-gray-400 mt-1">
-              Contact will be matched or created after the call
+              {activeAdapter === 'hubspot'
+                ? 'Contact will be matched in HubSpot after the call'
+                : 'Contact will be matched or created after the call'}
             </p>
           </div>
         )}

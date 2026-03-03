@@ -3,14 +3,44 @@ import { prisma } from '../lib/prisma';
 import { authenticate } from '../middleware/auth';
 import { AppError } from '../middleware/errorHandler';
 import { getCrmAdapter } from '../adapters/crm';
+import { HubSpotCrmAdapter } from '../adapters/crm/hubspot';
+import { getStoredCredentials } from './integrations';
 import type { CrmSyncStatus } from '@qualirec/shared';
 
 const router = Router();
 
+/**
+ * Resolve which CRM adapter to use and inject stored credentials.
+ * If HubSpot is configured in the DB, use it automatically.
+ */
+async function resolveAdapter(requestedAdapter?: string) {
+  let adapterName = requestedAdapter;
+
+  // If not specified or 'mock', check if HubSpot is configured
+  if (!adapterName || adapterName === 'mock') {
+    const hubspotCreds = await getStoredCredentials('CRM', 'hubspot');
+    if (hubspotCreds?.accessToken) {
+      adapterName = 'hubspot';
+    }
+  }
+
+  const adapter = getCrmAdapter(adapterName || 'mock');
+
+  // Inject stored credentials for HubSpot
+  if (adapter.name === 'hubspot') {
+    const creds = await getStoredCredentials('CRM', 'hubspot');
+    if (creds?.accessToken) {
+      (adapter as HubSpotCrmAdapter).setAccessToken(creds.accessToken as string);
+    }
+  }
+
+  return { adapter, adapterName: adapter.name };
+}
+
 // Search CRM contacts
 router.get('/contacts/search', authenticate, async (req: Request, res: Response) => {
   const { email, phone, name, company, adapter: adapterName } = req.query;
-  const adapter = getCrmAdapter((adapterName as string) || 'mock');
+  const { adapter } = await resolveAdapter(adapterName as string);
 
   const contacts = await adapter.searchContacts({
     email: email as string,
@@ -25,7 +55,7 @@ router.get('/contacts/search', authenticate, async (req: Request, res: Response)
 // Get CRM contact
 router.get('/contacts/:id', authenticate, async (req: Request, res: Response) => {
   const { adapter: adapterName } = req.query;
-  const adapter = getCrmAdapter((adapterName as string) || 'mock');
+  const { adapter } = await resolveAdapter(adapterName as string);
 
   const contact = await adapter.getContact(req.params.id);
   if (!contact) throw new AppError(404, 'Contact not found');
@@ -36,7 +66,7 @@ router.get('/contacts/:id', authenticate, async (req: Request, res: Response) =>
 // Create CRM contact
 router.post('/contacts', authenticate, async (req: Request, res: Response) => {
   const { adapter: adapterName } = req.query;
-  const adapter = getCrmAdapter((adapterName as string) || 'mock');
+  const { adapter } = await resolveAdapter(adapterName as string);
 
   const contact = await adapter.createContact(req.body);
   res.status(201).json({ success: true, data: contact });
@@ -45,7 +75,7 @@ router.post('/contacts', authenticate, async (req: Request, res: Response) => {
 // Update CRM contact
 router.put('/contacts/:id', authenticate, async (req: Request, res: Response) => {
   const { adapter: adapterName } = req.query;
-  const adapter = getCrmAdapter((adapterName as string) || 'mock');
+  const { adapter } = await resolveAdapter(adapterName as string);
 
   const contact = await adapter.updateContact(req.params.id, req.body);
   res.json({ success: true, data: contact });
@@ -53,8 +83,8 @@ router.put('/contacts/:id', authenticate, async (req: Request, res: Response) =>
 
 // Sync session to CRM
 router.post('/sync/:sessionId', authenticate, async (req: Request, res: Response) => {
-  const { adapter: adapterName, contactAction, contactId } = req.body;
-  const adapter = getCrmAdapter(adapterName || 'mock');
+  const { adapter: requestedAdapter, contactAction, contactId } = req.body;
+  const { adapter, adapterName } = await resolveAdapter(requestedAdapter);
 
   const session = await prisma.callSession.findUnique({
     where: { id: req.params.sessionId },
@@ -71,7 +101,7 @@ router.post('/sync/:sessionId', authenticate, async (req: Request, res: Response
   const syncLog = await prisma.crmSyncLog.create({
     data: {
       sessionId: session.id,
-      adapter: adapterName || 'mock',
+      adapter: adapterName,
       status: 'IN_PROGRESS',
       payload: req.body,
     },
@@ -104,7 +134,7 @@ router.post('/sync/:sessionId', authenticate, async (req: Request, res: Response
 
     // Add note with summary
     if (crmContactId && session.summary) {
-      const summary = session.summary as Record<string, unknown>;
+      const summary = session.summary as unknown as Record<string, unknown>;
       await adapter.addNote(crmContactId, {
         title: `Qualification Call - ${session.template.name}`,
         body: [
@@ -145,7 +175,7 @@ router.post('/sync/:sessionId', authenticate, async (req: Request, res: Response
       },
     });
 
-    res.json({ success: true, data: { crmContactId, syncLogId: syncLog.id } });
+    res.json({ success: true, data: { crmContactId, syncLogId: syncLog.id, adapter: adapterName } });
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 

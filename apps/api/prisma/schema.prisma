@@ -99,6 +99,7 @@ model CallSession {
   duration        Int?
   status          SessionStatus @default(IN_PROGRESS)
   floatingNotes   String?
+  transcript      Json?
   summary         Json?
   crmSyncStatus   CrmSyncStatus @default(PENDING)
   createdAt       DateTime      @default(now())

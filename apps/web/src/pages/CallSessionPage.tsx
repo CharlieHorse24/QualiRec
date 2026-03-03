@@ -10,6 +10,7 @@ import { QuestionPanel } from '@/components/call/QuestionPanel';
 import { ProgressBar } from '@/components/call/ProgressBar';
 import { FloatingNotes } from '@/components/call/FloatingNotes';
 import { CrmSidebar } from '@/components/call/CrmSidebar';
+import { LiveTranscription } from '@/components/call/LiveTranscription';
 import { formatDuration } from '@/lib/utils';
 import type { UserPreferences } from '@qualirec/shared';
 import {
@@ -20,6 +21,7 @@ import {
   StickyNote,
   PanelRightOpen,
   Wifi,
+  Mic,
 } from 'lucide-react';
 
 export function CallSessionPage() {
@@ -47,6 +49,7 @@ export function CallSessionPage() {
   const [showCrm, setShowCrm] = useState(true);
   const [showEndDialog, setShowEndDialog] = useState(false);
   const [isEnding, setIsEnding] = useState(false);
+  const [showTranscript, setShowTranscript] = useState(true);
 
   const viewMode = ((user?.preferences as UserPreferences)?.callViewMode as string) || 'guided';
 
@@ -77,6 +80,17 @@ export function CallSessionPage() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [nextQuestion, prevQuestion]);
+
+  const { updateAnswer } = useSessionStore();
+
+  // When transcript analysis extracts answers, apply them to the session
+  const handleAnalysisComplete = useCallback((result: {
+    extractedAnswers: Array<{ questionId: string; responseValue: unknown; notes?: string; confidence: string }>;
+    contactInfo: { name?: string; email?: string; phone?: string; company?: string };
+  }) => {
+    // Reload the session to pick up auto-applied answers from the backend
+    if (id) loadSession(id);
+  }, [id, loadSession]);
 
   const handleEndCall = async () => {
     setIsEnding(true);
@@ -154,6 +168,13 @@ export function CallSessionPage() {
           </div>
           <div className="flex items-center gap-2">
             <button
+              onClick={() => setShowTranscript((v) => !v)}
+              className={`p-2 rounded-md hover:bg-navy-800 transition-colors ${showTranscript ? 'bg-navy-800' : ''}`}
+              title="Toggle Transcript"
+            >
+              <Mic className="w-4 h-4" />
+            </button>
+            <button
               onClick={() => setShowNotes((v) => !v)}
               className="p-2 rounded-md hover:bg-navy-800 transition-colors"
               title="Toggle Notes (Ctrl+N)"
@@ -193,6 +214,16 @@ export function CallSessionPage() {
       <div className="flex-1 flex overflow-hidden">
         {/* Question Panel */}
         <div className="flex-1 overflow-y-auto">
+          {/* Live Transcription */}
+          {showTranscript && isTimerRunning && (
+            <div className="max-w-3xl mx-auto px-8 pt-4">
+              <LiveTranscription
+                sessionId={activeSession.id}
+                onAnalysisComplete={handleAnalysisComplete}
+              />
+            </div>
+          )}
+
           {viewMode === 'guided' && currentQuestion ? (
             <div className="max-w-3xl mx-auto p-8">
               {/* Section Header */}

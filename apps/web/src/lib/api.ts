@@ -216,8 +216,55 @@ class ApiClient {
     return this.request('/integrations/voip');
   }
 
-  async getCrmAdapters(): Promise<ApiResponse<string[]>> {
+  async getCrmAdapters(): Promise<ApiResponse<Array<{ name: string; isConfigured: boolean; hasStoredCredentials: boolean }>>> {
     return this.request('/integrations/crm');
+  }
+
+  async getActiveCrmAdapter(): Promise<ApiResponse<{ adapter: string }>> {
+    return this.request('/integrations/crm/active');
+  }
+
+  async saveIntegrationConfig(data: {
+    adapterType: string;
+    adapterName: string;
+    credentials: Record<string, string>;
+  }): Promise<ApiResponse<unknown>> {
+    return this.request('/integrations/config', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getIntegrationConfig(adapterType: string, adapterName: string): Promise<ApiResponse<unknown>> {
+    return this.request(`/integrations/config/${adapterType}/${adapterName}`);
+  }
+
+  async deleteIntegrationConfig(adapterType: string, adapterName: string): Promise<ApiResponse<unknown>> {
+    return this.request(`/integrations/config/${adapterType}/${adapterName}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Transcript
+  async saveTranscriptChunks(sessionId: string, chunks: Array<{ text: string; timestamp: string; speaker?: string; isFinal?: boolean }>): Promise<ApiResponse<unknown>> {
+    return this.request(`/sessions/${sessionId}/transcript`, {
+      method: 'PUT',
+      body: JSON.stringify({ chunks }),
+    });
+  }
+
+  async getTranscript(sessionId: string): Promise<ApiResponse<{ chunks: Array<{ text: string; timestamp: string; speaker?: string }>; fullText: string }>> {
+    return this.request(`/sessions/${sessionId}/transcript`);
+  }
+
+  async analyzeTranscript(sessionId: string): Promise<ApiResponse<{
+    extractedAnswers: Array<{ questionId: string; responseValue: unknown; notes?: string; confidence: string }>;
+    contactInfo: { name?: string; email?: string; phone?: string; company?: string; title?: string };
+    keyTopics: string[];
+  }>> {
+    return this.request(`/summary/${sessionId}/analyze-transcript`, {
+      method: 'POST',
+    });
   }
 
   // Admin

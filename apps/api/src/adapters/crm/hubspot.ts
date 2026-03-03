@@ -14,9 +14,19 @@ import type { ContactSearchQuery, CrmContact, NewContactData, CrmNote, CrmActivi
 export class HubSpotCrmAdapter implements CrmAdapter {
   name = 'hubspot';
 
+  // Token injected from IntegrationConfig DB at runtime
+  private _storedToken: string | null = null;
+
+  /**
+   * Set the access token from stored IntegrationConfig credentials.
+   * Called before any HubSpot operation when credentials are loaded from DB.
+   */
+  setAccessToken(token: string): void {
+    this._storedToken = token;
+  }
+
   private getAccessToken(): string {
-    // In production, retrieve from IntegrationConfig encrypted credentials
-    return process.env.HUBSPOT_ACCESS_TOKEN || '';
+    return this._storedToken || process.env.HUBSPOT_ACCESS_TOKEN || '';
   }
 
   private get baseUrl() {
